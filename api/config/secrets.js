@@ -1,7 +1,7 @@
-modeule.exports ={
-  clouddinary:{
-    apiKey: '731413353659513',
-    cloudName: 'rekiemdevs',
-    apiSecret: 'J1OwNEDHphhcy1VMvIKpXOnY3Jo'
+module.exports ={
+  cloudinary:{
+    api_key: '731413353659513',
+    cloud_name: 'rekiemdevs',
+    api_secret: 'J1OwNEDHphhcy1VMvIKpXOnY3Jo'
   }
 }

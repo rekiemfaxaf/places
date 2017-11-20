@@ -3,7 +3,7 @@ const secrets = require('../config/secrets');
 
 cloudinary.config(secrets.cloudinary);
 
-modulo.exports = function(imagePath){
+module.exports = function(imagePath){
   return new Promise((resolve,reject)=>{
     cloudinary.uploader.upload(imagePath, function(result){
       console.log(result);
