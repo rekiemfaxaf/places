@@ -25,7 +25,7 @@ let placeSchema = new mongoose.Schema({
 
 placeSchema.methods.updateImage = function(path, imageType){
   return uploader(path)
-    .then(secure_url => this.saveImageUrl(secure_url,imageType));
+  .then(secure_url => this.saveImageUrl(secure_url,imageType));
 };
 
 placeSchema.methods.saveImageUrl = function(secureUrl,imageType){
@@ -34,11 +34,32 @@ placeSchema.methods.saveImageUrl = function(secureUrl,imageType){
 };
 
 placeSchema.pre('save',function(next){
-  this.slug = slugify(this.title);
-  next();
-})
+  if(this._id) return next();
+  generateSlugAndContinue.call(this,0,next)
+});
+
+placeSchema.statics.validateSlugCount = function(slug){
+  return Place.count({slug: slug}).then(count=>{
+    if(count > 0) return false;
+    return true;
+  })
+};
 
 placeSchema.plugin(mongoosePaginate);
+
+function generateSlugAndContinue(count,next){
+  this.slug = slugify(this.title);
+  if(count != 0){
+    this.slug = this.slug + "-"+ count;
+  }
+
+  Place.validateSlugCount(this.slug).then(isValid=>{
+    if(!isValid) return generateSlugAndContinue.call(this,count+1,next);
+    next();
+  })
+}
+
+
 let Place = mongoose.model('Place', placeSchema);
 
 module.exports = Place;
