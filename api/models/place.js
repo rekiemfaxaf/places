@@ -12,6 +12,7 @@ let placeSchema = new mongoose.Schema({
     type: String,
     unique: true
   },
+  address: String,
   description: String,
   acceptsCreditCard: {
     type: Boolean,
@@ -34,7 +35,7 @@ placeSchema.methods.saveImageUrl = function(secureUrl,imageType){
 };
 
 placeSchema.pre('save',function(next){
-  if(this._id) return next();
+  if(this.slug) return next();
   generateSlugAndContinue.call(this,0,next)
 });
 
