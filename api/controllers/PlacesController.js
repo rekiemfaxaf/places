@@ -1,4 +1,5 @@
 const Place = require('../models/Place');
+const upload = require('../config/upload');
 
 function find(req,res,next){
   Place.findById(req.params.id)
@@ -71,4 +72,11 @@ function destroy(req,res){
   });
 }
 
-module.exports = {index, show, create, update, destroy, find};
+function multerMiddleware(){
+  return upload.fields([
+    {name: 'avatar', maxCount: 1},
+    {name: 'cover', maxCount: 1}
+  ]);
+}
+
+module.exports = {index, show, create, update, destroy, find, multerMiddleware};
