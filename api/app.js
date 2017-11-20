@@ -5,7 +5,7 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 
 
-const Place = require('./models/place');
+const Place = require('./models/Place');
 const places = require('./routes/places');
 const db = require('./config/database');
 
