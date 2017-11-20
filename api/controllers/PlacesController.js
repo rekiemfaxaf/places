@@ -1,5 +1,16 @@
 const Place = require('../models/Place');
 
+function find(req,res,next){
+  Place.findById(req.params.id)
+  .then(place=>{
+    req.place = place;
+    next();
+  }).catch(err=>{
+    console.log(err);
+    next(err);
+  });
+}
+
 function index(req,res){
   Place.paginate({},{page: req.query.page || 1, limit: 10, sort:{_id: -1} })
   .then(docs=>{
@@ -11,13 +22,7 @@ function index(req,res){
 }
 
 function show(req,res){
-  Place.findById(req.params.id)
-  .then(doc=>{
-    res.json(doc);
-  }).catch(err=>{
-    console.log(err);
-    res.json(err);
-  });
+  res.json(req.place);
 }
 
 function create(req,res){
@@ -45,7 +50,9 @@ function update(req,res){
       placeParams[attr] = req.body[attr];
     }
   });
-  Place.findByIdAndUpdate(req.params.id,placeParams,{new: true})
+
+  req.place = Object.assign(req.place, placeParams)
+  req.place.save()
   .then(doc=>{
     res.json(doc);
   }).catch(err=>{
@@ -55,7 +62,7 @@ function update(req,res){
 }
 
 function destroy(req,res){
-  Place.findByIdAndRemove(req.params.id)
+  req.place.remove()
   .then(doc=>{
     res.json(doc);
   }).catch(err=>{
@@ -64,4 +71,4 @@ function destroy(req,res){
   });
 }
 
-module.exports = {index, show, create, update, destroy};
+module.exports = {index, show, create, update, destroy, find};
