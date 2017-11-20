@@ -46,8 +46,35 @@ app.get('/places',(req,res)=>{
 });
 
 app.get('/places/:id',(req,res)=>{
-  console.log('post');
   Place.findById(req.params.id)
+  .then(doc=>{
+    res.json(doc);
+  }).catch(err=>{
+    console.log(err);
+    res.json(err);
+  });
+});
+
+app.put('/places/:id',(req,res)=>{
+  let attributes = ['title','description','acceptsCreditCard','openHour','closeHour'];
+  let placeParams = {};
+  attributes.forEach(attr=>{
+    console.log(attr);
+    if(Object.prototype.hasOwnProperty.call(req.body,attr)){
+      placeParams[attr] = req.body[attr];
+    }
+  });
+  Place.findByIdAndUpdate(req.params.id,placeParams,{new: true})
+  .then(doc=>{
+    res.json(doc);
+  }).catch(err=>{
+    console.log(err);
+    res.json(err);
+  });
+});
+
+app.delete('/places/:id',(req,res)=>{
+  Place.findByIdAndRemove(req.params.id)
   .then(doc=>{
     res.json(doc);
   }).catch(err=>{
