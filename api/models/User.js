@@ -14,7 +14,7 @@ let userSchema = new mongoose.Schema({
   }
 });
 
-userSchema.post('save',function(user,nex)){
+userSchema.post('save',function(user,nex){
   User.count({}).then(count=>{
     if(count==1){
       user.admin = true;
