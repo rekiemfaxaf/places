@@ -3,6 +3,7 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
+const jwtMiddleware = require('express-jwt');
 
 const Place = require('./models/Place');
 const places = require('./routes/places');
@@ -10,6 +11,7 @@ const users = require('./routes/users');
 const sessions = require('./routes/sessions')
 
 const db = require('./config/database');
+const secrets = require('./config/secrets');
 
 
 var app = express();
@@ -21,6 +23,11 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(
+  jwtMiddleware({secret: secrets.jwtSecret})
+  .unless({path: ['/sessions','/users'], method: 'GET'})
+);
 
 // mount routes for places with router file
 app.use('/places',places);

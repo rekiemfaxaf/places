@@ -32,6 +32,7 @@ function show(req,res){
 
 function create(req,res,next){
   const params = helpers.paramsBuilder(validParams,req.body);
+  params['_user'] = req.user.id;
   Place.create(params)
   .then(doc=>{
     req.place = doc;

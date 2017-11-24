@@ -26,7 +26,7 @@ userSchema.post('save',function(user,nex){
       next();
     }
   })
-}
+})
 
 userSchema.plugin(mongooseBcrypt);
 
