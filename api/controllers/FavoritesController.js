@@ -1,6 +1,6 @@
 const paramsBuilder = require('./helpers').paramsBuilder;
 const FavoritePlace = require('../models/FavoritePlace');
-
+const User = require('../models/User');
 const validParams = ['_place'];
 
 function find(req,res,next){
@@ -10,6 +10,18 @@ function find(req,res,next){
       req.favorite = fav;
       next();
     }).catch(next);
+}
+
+function index(req,res,next){
+  User.findOne({'_id':req.user.id})
+    .then(user=>{
+      user.favorites.then(favorites=>{
+        res.json(favorites);
+      })
+    }).catch(err=>{
+      console.log(err);
+      res.json(err);
+    })
 }
 
 function create(req,res){
@@ -36,4 +48,4 @@ function destroy(req,res){
     });
 }
 
-module.exports = {find,create,destroy};
+module.exports = {find,create,destroy,index};
